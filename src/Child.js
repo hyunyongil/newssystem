@@ -1,5 +1,5 @@
 import React from 'react'
-import style2 from './Child.module.css'
+import style2 from './Child.module.scss'
 export default function Child() {
   return (
     <div>
