@@ -1,4 +1,1 @@
-li{
-  width: 100px;
-  background-color: tan;
-}
+@import '~antd/dist/antd.css';
