@@ -1,0 +1,36 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "1111",
+      "author": "yongri"
+    },
+    {
+      "id": 2,
+      "title": "2222",
+      "author": "tietou"
+    },
+    {
+      "title": "333",
+      "author": "新来的33",
+      "id": 3
+    },
+    {
+      "title": "444",
+      "author": "新来的44",
+      "id": 4
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "111-comment",
+      "postId": 1
+    },
+    {
+      "id": 2,
+      "body": "222-comment",
+      "postId": 1
+    }
+  ]
+}
