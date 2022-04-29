@@ -77,7 +77,7 @@ function SideMenu(props) {
 
   const renderMenu = (menuList) => {
     return menuList.map(item => {
-      if (item.children && checkPagePermission(item)) {
+      if (item.children?.length > 0 && checkPagePermission(item)) {
         return <SubMenu key={item.key} icon={iconList[item.key]} title={item.title}>
           {renderMenu(item.children)}
         </SubMenu>
@@ -89,27 +89,18 @@ function SideMenu(props) {
       }
     })
   }
+  const selectKeys = [props.location.pathname]
+  const openKeys = ["/" + props.location.pathname.split("/")[1]]
   return (
     <Sider trigger={null} collapsible collapsed={false}>
-      <div className="logo">全球新闻发布管理</div>
-      <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-        {/* <Menu.Item key="1" icon={<UserOutlined />}>
-          首页
-        </Menu.Item>
-        <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-          首页2
-        </Menu.Item>
-        <Menu.Item key="3" icon={<UploadOutlined />}>
-          首页3
-        </Menu.Item>
-        <SubMenu key="sub4" icon={<UploadOutlined />} title="用户管理">
-          <Menu.Item key="9">Option9</Menu.Item>
-          <Menu.Item key="10">Option10</Menu.Item>
-          <Menu.Item key="11">Option11</Menu.Item>
-          <Menu.Item key="12">Option12</Menu.Item>
-        </SubMenu> */}
-        {renderMenu(meun)}
-      </Menu>
+      <div style={{ display: "flex", height: "100%", "flexDirection": "column" }}>
+        <div className="logo">全球新闻发布管理</div>
+        <div style={{ flex: 1, "overflow": "auto" }}>
+          <Menu theme="dark" mode="inline" selectedKeys={selectKeys} className="aaaaaaa" defaultOpenKeys={openKeys}>
+            {renderMenu(meun)}
+          </Menu>
+        </div>
+      </div>
     </Sider>
   )
 }
