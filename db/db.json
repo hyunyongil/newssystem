@@ -10,24 +10,6 @@
       "roleId": 1
     },
     {
-      "username": "铁锤",
-      "password": "123",
-      "roleState": true,
-      "default": false,
-      "region": "亚洲",
-      "roleId": 2,
-      "id": 2
-    },
-    {
-      "username": "钢蛋",
-      "password": "123",
-      "roleState": true,
-      "default": false,
-      "region": "南极洲",
-      "roleId": 2,
-      "id": 3
-    },
-    {
       "username": "诸葛山珍",
       "password": "123",
       "roleState": true,
