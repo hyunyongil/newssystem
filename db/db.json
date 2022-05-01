@@ -62,9 +62,6 @@
       "roleType": 1,
       "rights": [
         "/user-manage",
-        "/user-manage/add",
-        "/user-manage/delete",
-        "/user-manage/update",
         "/user-manage/list",
         "/right-manage",
         "/right-manage/role/list",
@@ -87,6 +84,9 @@
         "/publish-manage/unpublished",
         "/publish-manage/published",
         "/publish-manage/sunset",
+        "/user-manage/delete",
+        "/user-manage/update",
+        "/user-manage/add",
         "/home"
       ]
     },
@@ -114,7 +114,10 @@
         "/publish-manage",
         "/publish-manage/unpublished",
         "/publish-manage/published",
-        "/publish-manage/sunset"
+        "/publish-manage/sunset",
+        "/right-manage",
+        "/right-manage/right/list",
+        "/right-manage/role/list"
       ]
     },
     {

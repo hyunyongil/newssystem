@@ -11,6 +11,7 @@ export default function RoleList() {
   const [dataSource, setdataSource] = useState([])
   const [rightList, setRightList] = useState([])
   const [currentRights, setcurrentRights] = useState([])
+  const [currentId, setcurrentId] = useState(0)
   const [isModalVisible, setisModalVisible] = useState(false)
   const columns = [
     {
@@ -32,6 +33,7 @@ export default function RoleList() {
           <Button type="primary" shape="circle" icon={<UnorderedListOutlined />} style={{ marginLeft: 10 }} onClick={() => {
             setisModalVisible(true)
             setcurrentRights(item.rights)
+            setcurrentId(item.id)
           }} />
         </div>
       }
@@ -71,13 +73,28 @@ export default function RoleList() {
   }, [])
 
   const handleOk = () => {
-
+    setisModalVisible(false)
+    //同步dataSource
+    setdataSource(dataSource.map(item => {
+      if (item.id === currentId) {
+        console.log(currentRights)
+        return {
+          ...item,
+          rights: currentRights
+        }
+      }
+      return item
+    }))
+    //patch
+    axios.patch(`http://localhost:8000/roles/${currentId}`, {
+      rights: currentRights
+    })
   }
   const handleCancel = () => {
     setisModalVisible(false)
   }
   const onCheck = (checkedKeys) => {
-    setcurrentRights(checkedKeys)
+    setcurrentRights(checkedKeys.checked)
   }
   return (
     <div>
@@ -90,7 +107,7 @@ export default function RoleList() {
 
       <Modal title="权限分配" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
         <Tree
-          checkable
+          checkable={true}
           checkStrictly={true}
           checkedKeys={currentRights}
           onCheck={onCheck}
