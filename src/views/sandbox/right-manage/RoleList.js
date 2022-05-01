@@ -1,4 +1,4 @@
-import { Table, Button, Modal } from 'antd'
+import { Table, Button, Modal, Tree } from 'antd'
 import React, { useState, useEffect } from 'react'
 import {
   DeleteOutlined,
@@ -9,6 +9,9 @@ import axios from 'axios'
 const { confirm } = Modal;
 export default function RoleList() {
   const [dataSource, setdataSource] = useState([])
+  const [rightList, setRightList] = useState([])
+  const [currentRights, setcurrentRights] = useState([])
+  const [isModalVisible, setisModalVisible] = useState(false)
   const columns = [
     {
       title: 'ID',
@@ -26,8 +29,10 @@ export default function RoleList() {
       render: (item) => {
         return <div>
           <Button danger shape="circle" icon={<DeleteOutlined />} onClick={() => confirmMethod(item)} />
-          <Button type="primary" shape="circle" icon={<UnorderedListOutlined />} style={{ marginLeft: 10 }
-          } />
+          <Button type="primary" shape="circle" icon={<UnorderedListOutlined />} style={{ marginLeft: 10 }} onClick={() => {
+            setisModalVisible(true)
+            setcurrentRights(item.rights)
+          }} />
         </div>
       }
     }
@@ -58,6 +63,22 @@ export default function RoleList() {
       setdataSource(res.data)
     })
   }, [])
+
+  useEffect(() => {
+    axios.get(`http://localhost:8000/rights?_embed=children`).then(res => {
+      setRightList(res.data)
+    })
+  }, [])
+
+  const handleOk = () => {
+
+  }
+  const handleCancel = () => {
+    setisModalVisible(false)
+  }
+  const onCheck = (checkedKeys) => {
+    setcurrentRights(checkedKeys)
+  }
   return (
     <div>
       <Table dataSource={dataSource} columns={columns}
@@ -66,6 +87,16 @@ export default function RoleList() {
           pageSize: 5,
           position: ["bottomCenter"]
         }}   ></Table>
+
+      <Modal title="权限分配" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <Tree
+          checkable
+          checkStrictly={true}
+          checkedKeys={currentRights}
+          onCheck={onCheck}
+          treeData={rightList}
+        />
+      </Modal>
     </div>
   )
 }

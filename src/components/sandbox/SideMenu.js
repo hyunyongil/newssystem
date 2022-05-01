@@ -7,6 +7,8 @@ import {
   SettingOutlined,
   CopyOutlined,
   FormOutlined,
+  ProfileOutlined,
+  TeamOutlined,
   SoundOutlined
 } from '@ant-design/icons';
 import './index.css'
@@ -17,11 +19,19 @@ const iconList = {
   "/user-manage": <UserOutlined />,
   "/user-manage/list": <UserOutlined />,
   "/right-manage": <SettingOutlined />,
-  "/right-manage/role/list": <SettingOutlined />,
+  "/right-manage/role/list": <TeamOutlined />,
   "/right-manage/right/list": <SettingOutlined />,
   "/news-manage": <CopyOutlined />,
+  "/news-manage/add": <CopyOutlined />,
+  "/news-manage/draft": <CopyOutlined />,
+  "/news-manage/category": <ProfileOutlined />,
   "/audit-manage": <FormOutlined />,
-  "/publish-manage": <SoundOutlined />
+  "/audit-manage/audit": <FormOutlined />,
+  "/audit-manage/list": <FormOutlined />,
+  "/publish-manage": <SoundOutlined />,
+  "/publish-manage/unpublished": <SoundOutlined />,
+  "/publish-manage/published": <SoundOutlined />,
+  "/publish-manage/sunset": <SoundOutlined />,
 }
 function SideMenu(props) {
   const [meun, setMeun] = useState([])

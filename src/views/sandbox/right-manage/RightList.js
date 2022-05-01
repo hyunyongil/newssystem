@@ -9,19 +9,29 @@ import {
 const { confirm } = Modal;
 export default function RightList() {
   const [dataSource, setdataSource] = useState([])
-  // fetch("http://localhost:8000/rights", "get").then(res => {
-  //   setdataSource(res.data)
-  // })
+
   useEffect(() => {
-    axios.get(`http://localhost:8000/rights?_embed=children`).then(res => {
-      const list = res.data
-      list.forEach(item => {
-        if (item.children.length === 0) {
-          item.children = ""
-        }
+    fetch("http://localhost:8000/rights?_embed=children", {
+      method: "get"
+    }).then(res => {
+      res.json().then((data) => {
+        data.forEach(item => {
+          if (item.children.length === 0) {
+            item.children = ""
+          }
+        })
+        setdataSource(data)
       })
-      setdataSource(res.data)
     })
+    // axios.get(`http://localhost:8000/rights?_embed=children`).then(res => {
+    //   const list = res.data
+    //   list.forEach(item => {
+    //     if (item.children.length === 0) {
+    //       item.children = ""
+    //     }
+    //   })
+    //   setdataSource(res.data)
+    // })
   }, [])
   const columns = [
     {
