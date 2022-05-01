@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Layout, Menu } from 'antd'
 import { withRouter } from 'react-router-dom'
 import {
+  HomeOutlined,
   UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
+  SettingOutlined,
   CopyOutlined,
   FormOutlined,
   SoundOutlined
@@ -12,52 +12,13 @@ import {
 import './index.css'
 import axios from 'axios';
 const { Sider } = Layout
-const { SubMenu } = Menu
-
-// const menuList = [
-//   {
-//     key: "/home",
-//     title: "首页",
-//     icon: <VideoCameraOutlined />
-//   },
-//   {
-//     key: "/user-manage",
-//     title: "用户管理",
-//     icon: <UserOutlined />,
-//     children: [
-//       {
-//         key: "/user-manage/list",
-//         title: "用户管理",
-//         icon: <UserOutlined />
-//       }
-//     ]
-//   },
-//   {
-//     key: "/right-manage",
-//     title: "权限管理",
-//     icon: <UploadOutlined />,
-//     children: [
-//       {
-//         key: "/right-manage/role/list",
-//         title: "角色列表",
-//         icon: <UploadOutlined />
-//       },
-//       {
-//         key: "/right-manage/right/list",
-//         title: "权限列表",
-//         icon: <UploadOutlined />
-//       }
-//     ]
-//   }
-// ]
-
 const iconList = {
-  "/home": <VideoCameraOutlined />,
+  "/home": <HomeOutlined />,
   "/user-manage": <UserOutlined />,
   "/user-manage/list": <UserOutlined />,
-  "/right-manage": <UploadOutlined />,
-  "/right-manage/role/list": <UploadOutlined />,
-  "/right-manage/right/list": <UploadOutlined />,
+  "/right-manage": <SettingOutlined />,
+  "/right-manage/role/list": <SettingOutlined />,
+  "/right-manage/right/list": <SettingOutlined />,
   "/news-manage": <CopyOutlined />,
   "/audit-manage": <FormOutlined />,
   "/publish-manage": <SoundOutlined />
@@ -74,30 +35,45 @@ function SideMenu(props) {
     return item.pagepermisson === 1
   }
 
+  function getItem(label, key, icon, children) {
+    return {
+      label,
+      key,
+      icon,
+      children
+    }
+  }
+
   const renderMenu = (menuList) => {
-    return menuList.map(item => {
-      if (item.children?.length > 0 && checkPagePermission(item)) {
-        return <SubMenu key={item.key} icon={iconList[item.key]} title={item.title}>
-          {renderMenu(item.children)}
-        </SubMenu>
-      } else {
-        return checkPagePermission(item) && <Menu.Item key={item.key} icon={iconList[item.key]} onClick={() => {
-          props.history.push(item.key)
+    const items = []
+    menuList.forEach(item => {
+      const childrens = []
+      item.children.forEach(datas => {
+        if (checkPagePermission(datas)) {
+          childrens.push(getItem(datas.title, datas.key, iconList[datas.key]))
         }
-        }> {item.title}</Menu.Item >
+      })
+      if (checkPagePermission(item)) {
+        if (item.children?.length > 0) {
+          items.push(getItem(item.title, item.key, iconList[item.key], childrens))
+        } else {
+          items.push(getItem(item.title, item.key, iconList[item.key]))
+        }
       }
     })
+    return items;
   }
   const selectKeys = [props.location.pathname]
   const openKeys = ["/" + props.location.pathname.split("/")[1]]
+  const onClickMenu = (obj) => {
+    props.history.push(obj.key)
+  }
   return (
     <Sider trigger={null} collapsible collapsed={false}>
       <div style={{ display: "flex", height: "100%", "flexDirection": "column" }}>
         <div className="logo">全球新闻发布管理</div>
         <div style={{ flex: 1, "overflow": "auto" }}>
-          <Menu theme="dark" mode="inline" selectedKeys={selectKeys} className="aaaaaaa" defaultOpenKeys={openKeys}>
-            {renderMenu(meun)}
-          </Menu>
+          <Menu theme="dark" mode="inline" selectedKeys={selectKeys} className="aaaaaaa" defaultOpenKeys={openKeys} items={renderMenu(meun)} onClick={onClickMenu} />
         </div>
       </div>
     </Sider>
