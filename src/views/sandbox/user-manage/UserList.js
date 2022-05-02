@@ -1,4 +1,4 @@
-import { Table, Button, Modal, Switch } from 'antd'
+import { Table, Button, Modal, Switch, Form, Input, Select } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import {
@@ -7,8 +7,12 @@ import {
   ExclamationCircleOutlined
 } from '@ant-design/icons';
 const { confirm } = Modal;
+const { Option } = Select;
 export default function UserList() {
   const [dataSource, setdataSource] = useState([])
+  const [isAddVisible, setisAddVisible] = useState(false)
+  const [roleList, setroleList] = useState([])
+  const [regionList, setregionList] = useState([])
 
   useEffect(() => {
     // fetch("http://localhost:8000/users?_expand=role", {
@@ -24,6 +28,21 @@ export default function UserList() {
       setdataSource(list)
     })
   }, [])
+
+  useEffect(() => {
+    axios.get(`http://localhost:8000/regions`).then(res => {
+      const list = res.data
+      setregionList(list)
+    })
+  }, [])
+
+  useEffect(() => {
+    axios.get(`http://localhost:8000/roles`).then(res => {
+      const list = res.data
+      setroleList(list)
+    })
+  }, [])
+
   const columns = [
     {
       title: '区域',
@@ -81,6 +100,9 @@ export default function UserList() {
   }
   return (
     <div>
+      <Button type="primary" onClick={() => {
+        setisAddVisible(true)
+      }}>添加用户</Button>
       <Table dataSource={dataSource} columns={columns}
         pagination={{
           pageSize: 5,
@@ -88,6 +110,66 @@ export default function UserList() {
         }}
         rowKey={item => item.id}
       />
+
+      <Modal
+        visible={isAddVisible}
+        title="添加用户"
+        okText="确定"
+        cancelText="取消"
+        onCancel={() => {
+          setisAddVisible(false)
+        }}
+        onOk={() => {
+          console.log("add")
+        }}
+      >
+        <Form
+          layout="vertical"
+        >
+          <Form.Item
+            name="username"
+            label="用户名"
+            rules={[{ required: true, message: '请输入用户名!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label="密码"
+            rules={[{ required: true, message: '请输入密码!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            name="region"
+            label="区域"
+            rules={[{ required: true, message: '请选择区域!' }]}
+          >
+            <Select >
+              {
+                regionList.map(item =>
+                  <Option value={item.value} key={item.id}>{item.title}</Option>
+                )
+              }
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="roleId"
+            label="角色"
+            rules={[{ required: true, message: '请选择角色!' }]}
+          >
+            <Select >
+              {
+                roleList.map(item =>
+                  <Option value={item.id} key={item.id}>{item.roleName}</Option>
+                )
+              }
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   )
 }

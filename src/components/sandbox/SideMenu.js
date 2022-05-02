@@ -58,9 +58,9 @@ function SideMenu(props) {
     const items = []
     menuList.forEach(item => {
       const childrens = []
-      item.children.forEach(datas => {
-        if (checkPagePermission(datas)) {
-          childrens.push(getItem(datas.title, datas.key, iconList[datas.key]))
+      item.children.forEach(child => {
+        if (checkPagePermission(child)) {
+          childrens.push(getItem(child.title, child.key, iconList[child.key]))
         }
       })
       if (checkPagePermission(item)) {
