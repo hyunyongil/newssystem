@@ -30,7 +30,7 @@ export default function RoleList() {
       render: (item) => {
         return <div>
           <Button danger shape="circle" icon={<DeleteOutlined />} onClick={() => confirmMethod(item)} />
-          <Button type="primary" shape="circle" icon={<UnorderedListOutlined />} style={{ marginLeft: 10 }} onClick={() => {
+          <Button type="primary" shape="circle" icon={<UnorderedListOutlined />} style={{ marginLeft: 5 }} onClick={() => {
             setisModalVisible(true)
             setcurrentRights(item.rights)
             setcurrentId(item.id)

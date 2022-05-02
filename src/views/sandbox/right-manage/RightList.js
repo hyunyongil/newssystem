@@ -61,7 +61,7 @@ export default function RightList() {
             <Switch checked={item.pagepermisson} onChange={() => switchMethod(item)
             }></Switch>
           </div>} title="页面配置项" trigger={item.pagepermisson === undefined ? '' : 'click'}>
-            <Button type="primary" shape="circle" icon={<EditOutlined />} style={{ marginLeft: 10 }
+            <Button type="primary" shape="circle" icon={<EditOutlined />} style={{ marginLeft: 5 }
             } disabled={item.pagepermisson === undefined} />
           </Popover>
         </div>

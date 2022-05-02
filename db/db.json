@@ -135,7 +135,8 @@
         "/news-manage/category",
         "/user-manage",
         "/right-manage",
-        "/right-manage/role/list"
+        "/right-manage/role/list",
+        "/news-manage/add"
       ]
     }
   ],
