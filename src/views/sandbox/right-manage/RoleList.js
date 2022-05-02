@@ -77,7 +77,9 @@ export default function RoleList() {
     //同步dataSource
     setdataSource(dataSource.map(item => {
       if (item.id === currentId) {
-        console.log(currentRights)
+        // console.log(currentRights)
+        // item.rights = currentRights
+        // return item
         return {
           ...item,
           rights: currentRights
