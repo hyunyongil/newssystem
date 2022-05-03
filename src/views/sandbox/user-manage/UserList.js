@@ -1,19 +1,19 @@
-import { Table, Button, Modal, Switch, Form, Input, Select } from 'antd'
+import { Table, Button, Modal, Switch } from 'antd'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined
 } from '@ant-design/icons';
+import UserForm from '../../../components/user-manage/UserForm';
 const { confirm } = Modal;
-const { Option } = Select;
 export default function UserList() {
   const [dataSource, setdataSource] = useState([])
   const [isAddVisible, setisAddVisible] = useState(false)
   const [roleList, setroleList] = useState([])
   const [regionList, setregionList] = useState([])
-
+  const addForm = useRef(null)
   useEffect(() => {
     // fetch("http://localhost:8000/users?_expand=role", {
     //   method: "get"
@@ -98,6 +98,21 @@ export default function UserList() {
   const deleteMethod = (item) => {
 
   }
+
+  const addFormOK = () => {
+    addForm.current.validateFields().then(Value => {
+      setisAddVisible(false)
+      axios.post(`http://localhost:8000/users`, {
+        ...Value,
+        "roleState": true,
+        "default": false
+      }).then(res => {
+        setdataSource([...dataSource, res.data])
+      })
+    }).catch(err => {
+      console.log(err)
+    })
+  }
   return (
     <div>
       <Button type="primary" onClick={() => {
@@ -119,56 +134,10 @@ export default function UserList() {
         onCancel={() => {
           setisAddVisible(false)
         }}
-        onOk={() => {
-          console.log("add")
-        }}
+        onOk={() => addFormOK()}
       >
-        <Form
-          layout="vertical"
-        >
-          <Form.Item
-            name="username"
-            label="用户名"
-            rules={[{ required: true, message: '请输入用户名!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            label="密码"
-            rules={[{ required: true, message: '请输入密码!' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            name="region"
-            label="区域"
-            rules={[{ required: true, message: '请选择区域!' }]}
-          >
-            <Select >
-              {
-                regionList.map(item =>
-                  <Option value={item.value} key={item.id}>{item.title}</Option>
-                )
-              }
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="roleId"
-            label="角色"
-            rules={[{ required: true, message: '请选择角色!' }]}
-          >
-            <Select >
-              {
-                roleList.map(item =>
-                  <Option value={item.id} key={item.id}>{item.roleName}</Option>
-                )
-              }
-            </Select>
-          </Form.Item>
-        </Form>
+        <UserForm regionList={regionList} roleList={roleList}
+          ref={addForm}></UserForm>
       </Modal>
     </div>
   )
