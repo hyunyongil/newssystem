@@ -96,18 +96,23 @@ export default function UserList() {
   }
   //删除
   const deleteMethod = (item) => {
-
+    setdataSource(dataSource.filter(data => data.id !== item.id))
+    axios.delete(`http://localhost:8000/users/${item.id}`)
   }
 
   const addFormOK = () => {
-    addForm.current.validateFields().then(Value => {
+    addForm.current.validateFields().then(value => {
       setisAddVisible(false)
+      addForm.current.resetFields()
       axios.post(`http://localhost:8000/users`, {
-        ...Value,
+        ...value,
         "roleState": true,
         "default": false
       }).then(res => {
-        setdataSource([...dataSource, res.data])
+        setdataSource([...dataSource, {
+          ...res.data,
+          role: roleList.filter(item => item.id === value.roleId)[0]
+        }])
       })
     }).catch(err => {
       console.log(err)

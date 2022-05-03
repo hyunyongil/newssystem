@@ -1,6 +1,8 @@
 
 07:32:42
 
+cd C:\phpstudy_pro\WWW\gng.com\newssystem\db
+json-server --watch .\db.json --port 8000
 39 / 47:52
 
 05_02_02_09_00
