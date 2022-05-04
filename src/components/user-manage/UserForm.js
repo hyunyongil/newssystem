@@ -1,8 +1,13 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { Form, Input, Select } from 'antd'
 const { Option } = Select
 const UserForm = forwardRef((props, ref) => {
     const [isDisabled, setisDisabled] = useState(false)
+
+    useEffect(() => {
+        setisDisabled(props.isUpdateDisabled)
+    }, [props.isUpdateDisabled])
+
     return (
         <Form
             ref={ref}
@@ -11,22 +16,21 @@ const UserForm = forwardRef((props, ref) => {
             <Form.Item
                 name="username"
                 label="用户名"
-                rules={[{ required: true, message: '请输入用户名!' }]}
+                rules={[{ required: true, message: 'Please input the title of collection!' }]}
             >
                 <Input />
             </Form.Item>
             <Form.Item
                 name="password"
                 label="密码"
-                rules={[{ required: true, message: '请输入密码!' }]}
+                rules={[{ required: true, message: 'Please input the title of collection!' }]}
             >
                 <Input />
             </Form.Item>
-
             <Form.Item
                 name="region"
                 label="区域"
-                rules={isDisabled ? [] : [{ required: true, message: '请选择区域!' }]}
+                rules={isDisabled ? [] : [{ required: true, message: 'Please input the title of collection!' }]}
             >
                 <Select disabled={isDisabled}>
                     {
@@ -36,13 +40,13 @@ const UserForm = forwardRef((props, ref) => {
                     }
                 </Select>
             </Form.Item>
-
             <Form.Item
                 name="roleId"
                 label="角色"
-                rules={[{ required: true, message: '请选择角色!' }]}
+                rules={[{ required: true, message: 'Please input the title of collection!' }]}
             >
                 <Select onChange={(value) => {
+                    // console.log(value)
                     if (value === 1) {
                         setisDisabled(true)
                         ref.current.setFieldsValue({

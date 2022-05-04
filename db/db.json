@@ -16,16 +16,24 @@
       "default": false,
       "region": "",
       "roleId": 1,
-      "id": 4
+      "id": 4,
+      "roleList": false
     },
     {
-      "username": "西门吹灯",
-      "password": "123",
+      "username": "西门吹灯444566",
+      "password": "12344",
       "roleState": true,
       "default": false,
-      "region": "南极洲",
-      "roleId": 3,
-      "id": 5
+      "region": "北美洲",
+      "roleId": 2,
+      "id": 5,
+      "roleList": false,
+      "value": {
+        "username": "西门吹灯444",
+        "password": "123",
+        "region": "",
+        "roleId": 1
+      }
     },
     {
       "username": "轩辕翠花",
