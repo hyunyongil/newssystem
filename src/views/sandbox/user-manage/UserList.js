@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import UserForm from '../../../components/user-manage/UserForm';
 const { confirm } = Modal
-export default function UserList() {
+function UserList() {
   const [dataSource, setdataSource] = useState([])
   const [isAddVisible, setisAddVisible] = useState(false)
   const [isUpdateVisible, setisUpdateVisible] = useState(false)
@@ -102,29 +102,7 @@ export default function UserList() {
     }
   ]
 
-  const handleUpdate = (item) => {
-    console.log(item)
-    setTimeout(() => {
-      setisUpdateVisible(true)
-      if (item.roleId === 1) {
-        //禁用
-        setisUpdateDisabled(true)
-      } else {
-        //取消禁用
-        setisUpdateDisabled(false)
-      }
-      updateForm.current.setFieldsValue(item)
-    }, 0)
-    setcurrent(item)
-  }
 
-  const handleChange = (item) => {
-    item.roleState = !item.roleState
-    setdataSource([...dataSource])
-    axios.patch(`http://localhost:8000/users/${item.id}`, {
-      roleState: item.roleState
-    })
-  }
   const confirmMethod = (item) => {
     confirm({
       title: '你确定要删除吗?',
@@ -184,6 +162,29 @@ export default function UserList() {
     })
   }
 
+  const handleUpdate = (item) => {
+    console.log(item)
+    setTimeout(() => {
+      setisUpdateVisible(true)
+      if (item.roleId === 1) {
+        //禁用
+        setisUpdateDisabled(true)
+      } else {
+        //取消禁用
+        setisUpdateDisabled(false)
+      }
+      updateForm.current.setFieldsValue(item)
+    }, 0)
+    setcurrent(item)
+  }
+
+  const handleChange = (item) => {
+    item.roleState = !item.roleState
+    setdataSource([...dataSource])
+    axios.patch(`http://localhost:8000/users/${item.id}`, {
+      roleState: item.roleState
+    })
+  }
   return (
     <div>
       <Button type="primary" onClick={() => {
@@ -226,3 +227,4 @@ export default function UserList() {
     </div>
   )
 }
+export default UserList
