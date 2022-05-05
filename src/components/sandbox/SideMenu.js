@@ -41,8 +41,10 @@ function SideMenu(props) {
     })
   }, []);
 
+  const { role: { rights } } = JSON.parse(localStorage.getItem("token"))
   const checkPagePermission = (item) => {
-    return item.pagepermisson === 1
+    console.log(item)
+    return item.pagepermisson && rights.includes(item.key)
   }
 
   function getItem(label, key, icon, children) {

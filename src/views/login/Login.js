@@ -1,17 +1,28 @@
 import React from 'react'
-import { Form, Button, Input } from 'antd'
+import { Form, Button, Input, message } from 'antd'
 import {
   UserOutlined,
   LockOutlined
 } from '@ant-design/icons';
+import axios from 'axios'
 import './Login.css'
-export default function Login() {
+import logo from '../../logo.svg';
+import '../../App.css';
+function Login(props) {
   const onFinish = (values) => {
-    console.log(values)
+    axios.get(`http://localhost:8000/users?username=${values.username}&password=${values.password}&roleState=true&_expand=role`).then(res => {
+      if (res.data.length === 0) {
+        message.error("用户名或密码不匹配!")
+      } else {
+        localStorage.setItem("token", JSON.stringify(res.data[0]))
+        props.history.push("/")
+      }
+    })
   }
   return (
     <div style={{ background: 'rgb(35,39,65)', height: "100%" }}>
       <div className="formContainer">
+        <img src={logo} className="App-logo" alt="logo" />
         <div className="logintitle">全球新闻发布管理系统</div>
         <Form
           name="normal_login"
@@ -45,3 +56,4 @@ export default function Login() {
     </div>
   )
 }
+export default Login

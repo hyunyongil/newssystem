@@ -163,7 +163,7 @@ function UserList() {
   }
 
   const handleUpdate = (item) => {
-    console.log(item)
+    console.log(updateForm)
     setTimeout(() => {
       setisUpdateVisible(true)
       if (item.roleId === 1) {
@@ -219,8 +219,7 @@ function UserList() {
           setisUpdateVisible(false)
           setisUpdateDisabled(!isUpdateDisabled)
         }}
-        onOk={() => updateFormOK()}
-      >
+        onOk={() => updateFormOK()}>
         <UserForm regionList={regionList} roleList={roleList}
           ref={updateForm} isUpdateDisabled={isUpdateDisabled}></UserForm>
       </Modal>
