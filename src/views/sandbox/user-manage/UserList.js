@@ -18,6 +18,9 @@ function UserList() {
   const [regionList, setregionList] = useState([])
   const addForm = useRef(null)
   const updateForm = useRef(null)
+
+  const { roleId, region, username } = JSON.parse(localStorage.getItem("token"))
+
   useEffect(() => {
     // fetch("http://localhost:8000/users?_expand=role", {
     //   method: "get"
@@ -27,11 +30,20 @@ function UserList() {
     //     setdataSource(list)
     //   })
     // })
+    const roleObj = {
+      "1": "superadmin",
+      "2": "admin",
+      "3": "editor"
+    }
     axios.get(`http://localhost:8000/users?_expand=role`).then(res => {
       const list = res.data
-      setdataSource(list)
+      setdataSource(roleObj[roleId] === "superadmin" ? list : [
+        ...list.filter(item => item.username === username),
+        ...list.filter(item => item.region === region && roleObj[item.roleId] === "editor")
+      ])
     })
-  }, [])
+  }, [roleId, region, username])
+
 
   useEffect(() => {
     axios.get(`http://localhost:8000/regions`).then(res => {
@@ -221,7 +233,7 @@ function UserList() {
         }}
         onOk={() => updateFormOK()}>
         <UserForm regionList={regionList} roleList={roleList}
-          ref={updateForm} isUpdateDisabled={isUpdateDisabled}></UserForm>
+          ref={updateForm} isUpdateDisabled={isUpdateDisabled} isUpdate={true}></UserForm>
       </Modal>
     </div>
   )

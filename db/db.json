@@ -15,7 +15,7 @@
       "roleState": true,
       "default": false,
       "region": "欧洲",
-      "roleId": 3,
+      "roleId": 2,
       "id": 4,
       "roleList": false
     },
@@ -58,7 +58,7 @@
       "password": "123",
       "roleState": true,
       "default": false,
-      "region": "亚洲",
+      "region": "欧洲",
       "roleId": 3,
       "id": 8
     },
@@ -70,6 +70,15 @@
       "roleState": true,
       "default": false,
       "id": 9
+    },
+    {
+      "username": "g2",
+      "password": "123",
+      "region": "欧洲",
+      "roleId": 3,
+      "roleState": true,
+      "default": false,
+      "id": 10
     }
   ],
   "roles": [
@@ -150,7 +159,11 @@
         "/news-manage/add",
         "/news-manage/update/:id",
         "/news-manage",
-        "/news-manage/preview/:id"
+        "/news-manage/preview/:id",
+        "/right-manage",
+        "/right-manage/role/list",
+        "/right-manage/right/list",
+        "/user-manage/list"
       ]
     }
   ],
