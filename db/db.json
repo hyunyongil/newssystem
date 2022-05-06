@@ -155,15 +155,10 @@
         "/news-manage/list",
         "/news-manage/draft",
         "/news-manage/category",
-        "/user-manage",
         "/news-manage/add",
         "/news-manage/update/:id",
         "/news-manage",
-        "/news-manage/preview/:id",
-        "/right-manage",
-        "/right-manage/role/list",
-        "/right-manage/right/list",
-        "/user-manage/list"
+        "/news-manage/preview/:id"
       ]
     }
   ],
