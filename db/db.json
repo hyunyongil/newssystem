@@ -244,7 +244,7 @@
     },
     {
       "id": 16,
-      "title": "撰写新闻",
+      "title": "编写新闻",
       "rightId": 14,
       "key": "/news-manage/add",
       "grade": 2,
