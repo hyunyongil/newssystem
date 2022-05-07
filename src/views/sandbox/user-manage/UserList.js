@@ -22,7 +22,7 @@ function UserList() {
   const { roleId, region, username } = JSON.parse(localStorage.getItem("token"))
 
   useEffect(() => {
-    // fetch("http://localhost:8000/users?_expand=role", {
+    // fetch("/users?_expand=role", {
     //   method: "get"
     // }).then(res => {
     //   res.json().then((data) => {
@@ -35,7 +35,7 @@ function UserList() {
       "2": "admin",
       "3": "editor"
     }
-    axios.get(`http://localhost:8000/users?_expand=role`).then(res => {
+    axios.get(`/users?_expand=role`).then(res => {
       const list = res.data
       setdataSource(roleObj[roleId] === "superadmin" ? list : [
         ...list.filter(item => item.username === username),
@@ -46,14 +46,14 @@ function UserList() {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/regions`).then(res => {
+    axios.get(`/regions`).then(res => {
       const list = res.data
       setregionList(list)
     })
   }, [])
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/roles`).then(res => {
+    axios.get(`/roles`).then(res => {
       const list = res.data
       setroleList(list)
     })
@@ -132,14 +132,14 @@ function UserList() {
   //删除
   const deleteMethod = (item) => {
     setdataSource(dataSource.filter(data => data.id !== item.id))
-    axios.delete(`http://localhost:8000/users/${item.id}`)
+    axios.delete(`/users/${item.id}`)
   }
 
   const addFormOK = () => {
     addForm.current.validateFields().then(value => {
       setisAddVisible(false)
       addForm.current.resetFields()
-      axios.post(`http://localhost:8000/users`, {
+      axios.post(`/users`, {
         ...value,
         "roleState": true,
         "default": false
@@ -168,7 +168,7 @@ function UserList() {
         return item
       }))
       setisUpdateDisabled(!isUpdateDisabled)
-      axios.patch(`http://localhost:8000/users/${current.id}`,
+      axios.patch(`/users/${current.id}`,
         value
       )
     })
@@ -192,7 +192,7 @@ function UserList() {
   const handleChange = (item) => {
     item.roleState = !item.roleState
     setdataSource([...dataSource])
-    axios.patch(`http://localhost:8000/users/${item.id}`, {
+    axios.patch(`/users/${item.id}`, {
       roleState: item.roleState
     })
   }

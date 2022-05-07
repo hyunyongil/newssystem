@@ -34,25 +34,28 @@ export default function NewsRouter() {
     const [BackRouteList, setBackRouteList] = useState([])
     useEffect(() => {
         Promise.all([
-            axios.get(`http://localhost:8000/rights`),
-            axios.get(`http://localhost:8000/children`)
+            axios.get(`/rights`),
+            axios.get(`/children`)
         ]).then(res => {
             setBackRouteList([...res[0].data, ...res[1].data])
         })
     }, [])
+    const { role: { rights } } = JSON.parse(localStorage.getItem("token"))
+    const checkRoute = (item) => {
+        return LocalRouterMap[item.key] && item.pagepermisson
+    }
+    const checkUserPermission = (item) => {
+        return rights.includes(item.key)
+    }
     return (
         <Switch>
             {
-                // BackRouteList.map(item => {
-                //     if (checkRout() && checkUserPermission()) {
-                //         return <Route path={item.key} key={item.key} component={LocalRouterMap[item.key]} exact />
-                //     }
-                //     return <Nopermission />
-                // }
-                // )
-
-                BackRouteList.map(item =>
-                    <Route path={item.key} key={item.key} component={LocalRouterMap[item.key]} exact />
+                BackRouteList.map(item => {
+                    if (checkRoute(item) && checkUserPermission(item)) {
+                        return <Route path={item.key} key={item.key} component={LocalRouterMap[item.key]} exact />
+                    }
+                    return null
+                }
                 )
             }
             <Redirect from="/" to="/home" exact />

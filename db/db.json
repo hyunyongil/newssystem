@@ -134,16 +134,15 @@
         "/news-manage/preview/:id",
         "/news-manage/draft",
         "/news-manage/category",
-        "/audit-manage",
-        "/audit-manage/audit",
-        "/audit-manage/list",
         "/publish-manage",
         "/publish-manage/unpublished",
         "/publish-manage/published",
         "/publish-manage/sunset",
         "/right-manage",
         "/right-manage/right/list",
-        "/right-manage/role/list"
+        "/audit-manage",
+        "/audit-manage/audit",
+        "/audit-manage/list"
       ]
     },
     {
