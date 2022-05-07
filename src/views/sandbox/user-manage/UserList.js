@@ -175,7 +175,6 @@ function UserList() {
   }
 
   const handleUpdate = (item) => {
-    console.log(updateForm)
     setTimeout(() => {
       setisUpdateVisible(true)
       if (item.roleId === 1) {
@@ -222,7 +221,7 @@ function UserList() {
         <UserForm regionList={regionList} roleList={roleList}
           ref={addForm}></UserForm>
       </Modal>
-      <Modal
+      <Modal forceRender
         visible={isUpdateVisible}
         title="更新用户"
         okText="更新"
