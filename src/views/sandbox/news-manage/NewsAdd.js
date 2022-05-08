@@ -2,9 +2,10 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Form, Input, Select, Button, PageHeader, Steps } from 'antd'
 import style from './News.module.css'
 import axios from 'axios'
+import NewsEditor from '../../../components/news-manage/NewsEditor'
 const { Step } = Steps
 const { Option } = Select
-
+//cnpm i --save react-draft-wysiwyg draft-js
 export default function NewsAdd() {
     const [current, setCurrent] = useState(0)
     const [categoryList, setCategoryList] = useState([])
@@ -75,9 +76,14 @@ export default function NewsAdd() {
                         </Form.Item>
                     </Form>
                 </div>
+
+                <div className={current === 1 ? '' : style.active}>
+                    <NewsEditor getContent={(value) => {
+                        console.log(value)
+                    }}></NewsEditor>
+                </div>
+                <div className={current === 2 ? '' : style.active}>33333</div>
             </div>
-            <div className={current === 1 ? '' : style.active}>222222</div>
-            <div className={current === 2 ? '' : style.active}>33333</div>
             <div style={{ marginTop: "50px" }}>
                 {
                     current === 2 && <span>
