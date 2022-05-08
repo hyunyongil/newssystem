@@ -6,6 +6,7 @@ import NewsEditor from '../../../components/news-manage/NewsEditor'
 const { Step } = Steps
 const { Option } = Select
 //cnpm i --save react-draft-wysiwyg draft-js
+//cnpm i --save draftjs-to-html
 export default function NewsAdd() {
     const [current, setCurrent] = useState(0)
     const [categoryList, setCategoryList] = useState([])
