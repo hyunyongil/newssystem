@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Form, Input, Select, Button, PageHeader, Steps } from 'antd'
+import { Form, Input, Select, Button, PageHeader, Steps, message, notification } from 'antd'
 import style from './News.module.css'
 import axios from 'axios'
 import NewsEditor from '../../../components/news-manage/NewsEditor'
@@ -7,19 +7,26 @@ const { Step } = Steps
 const { Option } = Select
 //cnpm i --save react-draft-wysiwyg draft-js
 //cnpm i --save draftjs-to-html
-export default function NewsAdd() {
+export default function NewsAdd(props) {
     const [current, setCurrent] = useState(0)
     const [categoryList, setCategoryList] = useState([])
+    const [formInfo, setformInfo] = useState({})
+    const [content, setContent] = useState({})
+    const User = JSON.parse(localStorage.getItem("token"))
     const handleNext = () => {
         if (current === 0) {
             NewsForm.current.validateFields().then(res => {
-                console.log(res)
+                setformInfo(res)
                 setCurrent(current + 1)
             }).catch(error => {
                 console.log(error)
             })
         } else {
-            setCurrent(current + 1)
+            if (content.length === undefined || content.trim() === "<p></p>") {
+                message.error("新闻内容不能为空")
+            } else {
+                setCurrent(current + 1)
+            }
         }
 
     }
@@ -37,6 +44,33 @@ export default function NewsAdd() {
             setCategoryList(res.data)
         })
     }, [])
+
+    const handleSave = (auditState) => {
+
+        axios.post('/news', {
+            ...formInfo,
+            "content": content,
+            "region": User.region ? User.region : "全球",
+            "author": User.username,
+            "roleId": User.roleId,
+            "auditState": auditState,
+            "publishState": 0,
+            "createTime": Date.now(),
+            "star": 0,
+            "view": 0,
+            // "publishTime": 0
+        }).then(res => {
+            props.history.push(auditState === 0 ? '/news-manage/draft' : '/audit-manage/list')
+
+            notification.info({
+                message: `通知`,
+                description:
+                    `您可以到${auditState === 0 ? '草稿箱' : '审核列表'}中查看您的新闻`,
+                placement: "bottomRight",
+            });
+        })
+    }
+
     return (
         <div>
             <PageHeader
@@ -80,16 +114,17 @@ export default function NewsAdd() {
 
                 <div className={current === 1 ? '' : style.active}>
                     <NewsEditor getContent={(value) => {
-                        console.log(value)
+                        setContent(value)
                     }}></NewsEditor>
                 </div>
-                <div className={current === 2 ? '' : style.active}>33333</div>
+                <div className={current === 2 ? '' : style.active}></div>
             </div>
             <div style={{ marginTop: "50px" }}>
                 {
                     current === 2 && <span>
-                        <Button type="primary">保存草稿箱</Button>
-                        <Button type="danger">提交审核</Button></span>
+                        <Button type="primary" onClick={() => handleSave(0)}>保存草稿箱</Button>
+                        <Button danger onClick={() => handleSave(1)}>提交审核</Button>
+                    </span>
                 }
                 {
                     current < 2 && <Button type="primary" onClick={handleNext}>下一步</Button>
