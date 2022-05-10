@@ -123,14 +123,14 @@ export default function NewsAdd(props) {
                 {
                     current === 2 && <span>
                         <Button type="primary" onClick={() => handleSave(0)}>保存草稿箱</Button>
-                        <Button danger onClick={() => handleSave(1)}>提交审核</Button>
+                        <Button style={{ marginLeft: 5 }} danger onClick={() => handleSave(1)}>提交审核</Button>
                     </span>
                 }
                 {
                     current < 2 && <Button type="primary" onClick={handleNext}>下一步</Button>
                 }
                 {
-                    current > 0 && <Button onClick={handlePrevious}>上一步</Button>
+                    current > 0 && <Button style={{ marginLeft: 5 }} onClick={handlePrevious}>上一步</Button>
                 }
             </div>
         </div>
