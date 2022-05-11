@@ -16,6 +16,7 @@
     "draftjs-to-html": "^0.9.1",
     "events": "^3.3.0",
     "hoist-non-react-statics": "^3.3.2",
+    "html-to-draftjs": "^1.5.0",
     "http-proxy-middleware": "^2.0.6",
     "loadash": "^1.0.0",
     "moment": "^2.29.3",

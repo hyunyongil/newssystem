@@ -8,7 +8,7 @@ import {
     ExclamationCircleOutlined
 } from '@ant-design/icons';
 const { confirm } = Modal;
-export default function NewsDraft() {
+export default function NewsDraft(props) {
     const [dataSource, setdataSource] = useState([])
     const { username } = JSON.parse(localStorage.getItem("token"))
     useEffect(() => {
@@ -48,7 +48,9 @@ export default function NewsDraft() {
             render: (item) => {
                 return <div>
                     <Button danger shape="circle" icon={<DeleteOutlined />} onClick={() => confirmMethod(item)} />
-                    <Button shape="circle" icon={<EditOutlined />} style={{ marginLeft: 5 }} />
+                    <Button shape="circle" icon={<EditOutlined />} style={{ marginLeft: 5 }} onClick={() => {
+                        props.history.push(`/news-manage/update/${item.id}`)
+                    }} />
                     <Button type="primary" shape="circle" icon={<UploadOutlined />} style={{ marginLeft: 5 }} />
                 </div>
             }

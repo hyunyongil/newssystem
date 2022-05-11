@@ -1,19 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Form, Input, Select, Button, PageHeader, Steps, message, notification } from 'antd'
+import { PageHeader, Steps, Button, Form, Input, Select, message, notification } from 'antd'
 import style from './News.module.css'
 import axios from 'axios'
-import NewsEditor from '../../../components/news-manage/NewsEditor'
-const { Step } = Steps
-const { Option } = Select
+import NewsEditor from '../../../components/news-manage/NewsEditor';
+const { Step } = Steps;
+const { Option } = Select;
 //cnpm i --save react-draft-wysiwyg draft-js
 //cnpm i --save draftjs-to-html
-//cnpm i --save html-to-draftjs
-export default function NewsAdd(props) {
+export default function NewsUpdate(props) {
     const [current, setCurrent] = useState(0)
     const [categoryList, setCategoryList] = useState([])
     const [formInfo, setformInfo] = useState({})
     const [content, setContent] = useState("")
-    const User = JSON.parse(localStorage.getItem("token"))
+    //const User = JSON.parse(localStorage.getItem("token"))
     const handleNext = () => {
         if (current === 0) {
             NewsForm.current.validateFields().then(res => {
@@ -23,7 +22,7 @@ export default function NewsAdd(props) {
                 console.log(error)
             })
         } else {
-            if (content === "" || content.trim() === "<p></p>") {
+            if (content.length === undefined || content.trim() === "<p></p>") {
                 message.error("新闻内容不能为空")
             } else {
                 setCurrent(current + 1)
@@ -46,20 +45,24 @@ export default function NewsAdd(props) {
         })
     }, [])
 
+    useEffect(() => {
+        axios.get(`/news/${props.match.params.id}?_expand=category&_expand=role`).then(res => {
+            let { title, categoryId, content } = res.data
+            NewsForm.current.setFieldsValue({
+                title,
+                categoryId
+            })
+            setContent(content)
+        })
+    }, [props.match.params.id])
+
+
     const handleSave = (auditState) => {
 
-        axios.post('/news', {
+        axios.patch(`/news/${props.match.params.id}`, {
             ...formInfo,
             "content": content,
-            "region": User.region ? User.region : "全球",
-            "author": User.username,
-            "roleId": User.roleId,
             "auditState": auditState,
-            "publishState": 0,
-            "createTime": Date.now(),
-            "star": 0,
-            "view": 0,
-            // "publishTime": 0
         }).then(res => {
             props.history.push(auditState === 0 ? '/news-manage/draft' : '/audit-manage/list')
 
@@ -67,7 +70,7 @@ export default function NewsAdd(props) {
                 message: `通知`,
                 description:
                     `您可以到${auditState === 0 ? '草稿箱' : '审核列表'}中查看您的新闻`,
-                placement: "bottomRight",
+                placement: "bottomRight"
             });
         })
     }
@@ -76,7 +79,8 @@ export default function NewsAdd(props) {
         <div>
             <PageHeader
                 className="site-page-header"
-                title="编写新闻"
+                title="更新新闻"
+                onBack={() => props.history.goBack()}
                 subTitle="发布成功奖励1万元起" />
             <Steps current={current}>
                 <Step title="基本信息" description="新闻标提，新闻纷飞" />
@@ -116,7 +120,7 @@ export default function NewsAdd(props) {
                 <div className={current === 1 ? '' : style.active}>
                     <NewsEditor getContent={(value) => {
                         setContent(value)
-                    }}></NewsEditor>
+                    }} content={content}></NewsEditor>
                 </div>
                 <div className={current === 2 ? '' : style.active}></div>
             </div>
