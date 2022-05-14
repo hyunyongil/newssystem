@@ -1,4 +1,4 @@
-import { Button, Table } from 'antd'
+import { Table } from 'antd'
 import React from 'react'
 
 export default function NewsPublish(props) {
@@ -23,9 +23,9 @@ export default function NewsPublish(props) {
         },
         {
             title: '操作',
-            render: () => {
+            render: (item) => {
                 return <div>
-                    <Button>button</Button>
+                    {props.button(item.id)}
                 </div>
             }
         }

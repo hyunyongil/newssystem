@@ -1,18 +1,12 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import usePublish from '../../../components/news-manage/usePublish'
 import NewsPublish from '../../../components/publish-manage/NewsPublish'
-
+import { Button } from 'antd'
 export default function Unpublished() {
-    const { username } = JSON.parse(localStorage.getItem("token"))
-    const [dataSource, setdataSource] = useState([])
-    useEffect(() => {
-        axios(`/news?author=${username}&publishState=1&_expand=categroy`).then(res => {
-            setdataSource(res.data)
-        })
-    }, [username])
+    // 1=>待发布
+    const { dataSource, handlePublish } = usePublish(1)
     return (
         <div>
-            <NewsPublish dataSource={dataSource}></NewsPublish>
+            <NewsPublish dataSource={dataSource} button={(id) => <Button onClick={() => handlePublish(id)} type='primary'>发布</Button>}></NewsPublish>
         </div>
     )
 }
