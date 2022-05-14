@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Button, Tag } from 'antd'
+import { Table, Button, Tag, notification } from 'antd'
 import axios from 'axios'
 import {
     SendOutlined,
     ClearOutlined,
     AppleOutlined
 } from '@ant-design/icons';
-export default function AuditList() {
+export default function AuditList(props) {
     const [dataSource, setdataSource] = useState([])
     const { username } = JSON.parse(localStorage.getItem("token"))
     useEffect(() => {
-        axios.get(`/news?auditState_ne=0&author_new=${username}&publishState_lte=1&_expand=category`).then(res => {
+        axios.get(`/news?auditState_ne=0&author=${username}&publishState_lte=1&_expand=category`).then(res => {
             const list = res.data
             setdataSource(list)
         })
@@ -49,14 +49,14 @@ export default function AuditList() {
             render: (item) => {
                 return <div>
                     {
-                        item.auditState === 1 && <Button icon={<ClearOutlined />}>撤销</Button>
+                        item.auditState === 1 && <Button icon={<ClearOutlined />} onClick={() => handleRervert(item)}>撤销</Button>
                     }
                     {
-                        item.auditState === 2 && <Button type='danger' icon={<SendOutlined />} >发布</Button>
+                        item.auditState === 2 && <Button type='danger' icon={<SendOutlined />} onClick={() => handlePublish(item)}>发布</Button>
                     }
 
                     {
-                        item.auditState === 3 && <Button type='primary' icon={<AppleOutlined />}>更新</Button>
+                        item.auditState === 3 && <Button type='primary' icon={<AppleOutlined />} onClick={() => handleUpdate(item)}>更新</Button>
                     }
 
                 </div>
@@ -64,6 +64,38 @@ export default function AuditList() {
         }
     ]
 
+    const handleRervert = (item) => {
+        setdataSource(dataSource.filter(data => data.id !== item.id))
+        axios.patch(`/news/${item.id}`, {
+            auditState: 0
+        }).then(res => {
+            notification.info({
+                message: `通知`,
+                description:
+                    `您可以到草稿箱中查看您的新闻`,
+                placement: "bottomRight"
+            });
+        })
+    }
+
+    const handleUpdate = (item) => {
+        props.history.push(`/news-manage/update/${item.id}`)
+    }
+
+    const handlePublish = (item) => {
+        axios.patch(`/news/${item.id}`, {
+            publishState: 2
+        }).then(res => {
+            props.history.push('/publish-manage/published')
+
+            notification.info({
+                message: `通知`,
+                description:
+                    `您可以到【发布管理/已发布】中查看您的新闻`,
+                placement: "bottomRight"
+            });
+        })
+    }
 
     return (
         <div>
