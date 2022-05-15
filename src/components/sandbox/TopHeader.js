@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Layout, Dropdown, Menu, Avatar } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -11,9 +11,10 @@ import { connect } from 'react-redux'
 const { Header } = Layout;
 //cnpm i --save redux react-redux
 function TopHeader(props) {
-  const [collapsed, setCollapsed] = useState(false)
+  // const [collapsed, setCollapsed] = useState(false)
   const changeCollapsed = () => {
-    setCollapsed(!collapsed)
+    //改变state的isCollapsed
+    props.changeCollapsed()
   }
   const { role: { roleName }, username } = JSON.parse(localStorage.getItem("token"))
   const menu = (
@@ -36,7 +37,7 @@ function TopHeader(props) {
       onClick: this.toggle,
     })} */}
       {
-        collapsed ? <MenuUnfoldOutlined onClick={changeCollapsed} /> : <MenuFoldOutlined onClick={changeCollapsed} />
+        props.isCollapsed ? <MenuUnfoldOutlined onClick={changeCollapsed} /> : <MenuFoldOutlined onClick={changeCollapsed} />
       }
       <div style={{ float: "right" }}>
         <span>欢迎<span style={{ color: "#1890ff" }}>{username}</span>回来</span>
@@ -54,9 +55,17 @@ connect(
 )(被包装的组件)
 */
 const mapStateToProps = ({ CollApsedReducer: { isCollapsed } }) => {
-  console.log(isCollapsed)
   return {
     isCollapsed
   }
 }
-export default connect(mapStateToProps)(withRouter(TopHeader))
+
+const mapDispatchToProps = {
+  changeCollapsed() {
+    return {
+      type: "change_collapsed"
+      //payload
+    }//action
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(TopHeader))
