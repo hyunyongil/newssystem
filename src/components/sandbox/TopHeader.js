@@ -6,8 +6,10 @@ import {
   UserOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom'
-const { Header } = Layout;
+import { connect } from 'react-redux'
 
+const { Header } = Layout;
+//cnpm i --save redux react-redux
 function TopHeader(props) {
   const [collapsed, setCollapsed] = useState(false)
   const changeCollapsed = () => {
@@ -45,4 +47,16 @@ function TopHeader(props) {
     </Header>
   )
 }
-export default withRouter(TopHeader)
+/*
+connect(
+ //mapStateToProps
+ //mapDispatchToProps
+)(被包装的组件)
+*/
+const mapStateToProps = ({ CollApsedReducer: { isCollapsed } }) => {
+  console.log(isCollapsed)
+  return {
+    isCollapsed
+  }
+}
+export default connect(mapStateToProps)(withRouter(TopHeader))
