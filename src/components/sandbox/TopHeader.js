@@ -1,10 +1,10 @@
 import React from 'react'
-import { Layout, Dropdown, Menu, Avatar } from 'antd';
+import { Layout, Dropdown, Menu, Avatar } from 'antd'
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined
-} from '@ant-design/icons';
+} from '@ant-design/icons'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
