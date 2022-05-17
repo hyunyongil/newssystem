@@ -37,7 +37,7 @@ export default function NewsPreview(props) {
                         __html: newsInfo.content
                     }} style={{
                         border: "1px solid #ccc",
-                        padding: "5px",
+                        padding: "15px",
                         margin: "0 24px"
                     }}>
                     </div>
