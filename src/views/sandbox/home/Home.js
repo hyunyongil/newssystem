@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { List, Card, Avatar, Col, Row } from 'antd'
+import { List, Card, Avatar, Col, Row, Drawer } from 'antd'
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import _ from 'lodash'
@@ -11,8 +11,12 @@ const { Meta } = Card
 export default function Home() {
   const [viewList, setviewList] = useState([])
   const [starList, setstarList] = useState([])
+  const [allList, setallList] = useState([])
+  const [visible, setvisible] = useState(false)
+  const [pieChart, setpieChart] = useState(null)
 
   const barRef = useRef()
+  const pieRef = useRef()
   useEffect(() => {
     axios.get(`/news?publishState=2&_expand=category&_sort=view&_order=desc&_limit=6`).then(res => {
       setviewList(res.data)
@@ -28,6 +32,7 @@ export default function Home() {
   useEffect(() => {
     axios.get(`/news?publishState=2&_expand=category`).then(res => {
       renderBarView(_.groupBy(res.data, item => item.category.title))
+      setallList(res.data)
     })
     return () => {
       window.onresize = null
@@ -72,6 +77,60 @@ export default function Home() {
       myChart.resize()
     }
   }
+
+  const renderPieView = (obj) => {
+    var currentList = allList.filter(item => item.author === username)
+    var groupObj = _.groupBy(currentList, item => item.category.title)
+    var list = []
+    for (var i in groupObj) {
+      list.push({
+        name: i,
+        value: groupObj[i].length
+      })
+    }
+    var myChart;
+    if (!pieChart) {
+      myChart = ECharts.init(pieRef.current);
+      setpieChart(myChart)
+    } else {
+      myChart = pieChart
+    }
+    var option;
+
+    option = {
+      title: {
+        text: '当前用户新闻分类图示',
+        //subtext: '',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left'
+      },
+      series: [
+        {
+          name: '发布数量',
+          type: 'pie',
+          radius: '50%',
+          data: list,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+
+    option && myChart.setOption(option);
+
+  }
+
   const { username, region, role: { roleName } } = JSON.parse(localStorage.getItem("token"))
   return (
     <div className="site-card-wrapper">
@@ -103,7 +162,11 @@ export default function Home() {
               />
             }
             actions={[
-              <SettingOutlined key="setting" />,
+              <SettingOutlined key="setting" onClick={() => {
+                setvisible(true)
+                // init初始化
+                renderPieView()
+              }} />,
               <EditOutlined key="edit" />,
               <EllipsisOutlined key="ellipsis" />,
             ]}
@@ -121,6 +184,11 @@ export default function Home() {
           </Card>
         </Col>
       </Row>
+      <Drawer forceRender={true} width="500px" title="个人新闻分类" placement="right" closable={true} onClose={() => {
+        setvisible(false)
+      }} visible={visible} >
+        <div ref={pieRef} style={{ width: "100%", height: "400px", marginTop: "30px" }}></div>
+      </Drawer>
       <div ref={barRef} style={{ width: "100%", height: "400px", marginTop: "30px" }}></div>
     </div>
   )

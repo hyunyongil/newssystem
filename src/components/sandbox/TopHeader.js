@@ -17,19 +17,23 @@ function TopHeader(props) {
     props.changeCollapsed()
   }
   const { role: { roleName }, username } = JSON.parse(localStorage.getItem("token"))
-  const menu = (
-    <Menu>
-      <Menu.Item>
-        {roleName}
-      </Menu.Item>
-      <Menu.Item danger onClick={() => {
-        localStorage.removeItem("token")
-        props.history.replace("/login")
-      }}>
-        退出
-      </Menu.Item>
-    </Menu>
-  );
+  const logout = () => {
+    localStorage.removeItem("token")
+    props.history.replace("/login")
+  }
+  const menu = [
+    {
+      label: roleName,
+      key: 1
+    },
+    {
+      label: '退出',
+      key: 2,
+      danger: true,
+      onClick: logout
+    }
+  ]
+
   return (
     <Header className="site-layout-background" style={{ padding: '0 16px' }}>
       {/* {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
@@ -41,7 +45,7 @@ function TopHeader(props) {
       }
       <div style={{ float: "right" }}>
         <span>欢迎<span style={{ color: "#1890ff" }}>{username}</span>回来</span>
-        <Dropdown overlay={menu}>
+        <Dropdown overlay={<Menu items={menu} />}>
           <Avatar size="large" icon={<UserOutlined />} />
         </Dropdown>
       </div>
