@@ -44,7 +44,7 @@ function TopHeader(props) {
         props.isCollapsed ? <MenuUnfoldOutlined onClick={changeCollapsed} /> : <MenuFoldOutlined onClick={changeCollapsed} />
       }
       <div style={{ float: "right" }}>
-        <span>欢迎<span style={{ color: "#1890ff" }}>{username}</span>回来</span>
+        <span style={{ marginRight: "5px" }}>欢迎<span style={{ color: "#1890ff" }}>{username}</span>回来</span>
         <Dropdown overlay={<Menu items={menu} />}>
           <Avatar size="large" icon={<UserOutlined />} />
         </Dropdown>

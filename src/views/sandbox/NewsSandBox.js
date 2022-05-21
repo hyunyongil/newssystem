@@ -20,7 +20,7 @@ export default function NewsSandBox() {
     <Layout>
       <SideMenu></SideMenu>
       <Layout className="site-layout">
-        <TopHeader></TopHeader>
+        <TopHeader theme="light"></TopHeader>
         <Content
           className="site-layout-background"
           style={{

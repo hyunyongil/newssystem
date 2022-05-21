@@ -3,10 +3,10 @@ import { Form, Button, Input, message } from 'antd'
 import {
   UserOutlined,
   LockOutlined
-} from '@ant-design/icons';
+} from '@ant-design/icons'
 import axios from 'axios'
 import './Login.css'
-import logo from '../../logo.svg';
+import logo from '../../logo.svg'
 import '../../App.css';
 function Login(props) {
   const onFinish = (values) => {
