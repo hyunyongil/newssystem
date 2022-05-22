@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { PageHeader, Descriptions, message, Tooltip, Comment, Avatar, Form, Button, List, Input, Modal } from 'antd'
+import { PageHeader, Descriptions, message, Tooltip, Comment, Avatar, Form, Button, List, Input, Modal, notification, Spin } from 'antd'
 import { HeartTwoTone } from '@ant-design/icons'
 import moment from 'moment'
 import { v4 as uuidv4 } from "uuid"
-import { notification } from 'antd'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 import {
     ExclamationCircleOutlined
 } from '@ant-design/icons'
@@ -26,7 +27,13 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
         </Form.Item>
     </>
 )
+
 export default function Detail(props) {
+    NProgress.start()
+    useEffect(() => {
+        NProgress.done()
+    })
+
     let userid = ''
     const useridToken = localStorage.getItem("userid" + props.match.params.id)
     if (useridToken) {
@@ -92,6 +99,7 @@ export default function Detail(props) {
     const [newsInfo, setnewsInfo] = useState(null)
     const [heartState, setheartState] = useState(true)
     const [avataUrl, setavataUrl] = useState(getAvata())
+    const [spin, setspin] = useState(true)
     //Comment
     const [state, setState] = useState({
         comments: [],
@@ -127,8 +135,8 @@ export default function Detail(props) {
                 view: res.view + 1
             })
         })
+        setspin(false)
     }, [props.match.params.id])
-
 
     const handleStar = () => {
         if (!heartState) {
@@ -164,26 +172,7 @@ export default function Detail(props) {
             submitting: true
         })
 
-
         const nowtime = +Date.now()
-        setTimeout(() => {
-            setState({
-                submitting: false,
-                value: '',
-                comments: [
-                    ...state.comments,
-                    {
-                        author: userid,
-                        avatar: avataUrl,
-                        content: <p>{state.value}</p>,
-                        datetime: makeTime(nowtime),
-                        timestamp: nowtime
-                    },
-                ],
-            });
-        }, 1000)
-
-
         axios.post('/comments', {
             "author": userid,
             "avatar": avataUrl,
@@ -191,6 +180,21 @@ export default function Detail(props) {
             "datetime": nowtime,
             "newsid": parseInt(props.match.params.id)
         }).then(res => {
+            setState({
+                submitting: false,
+                value: '',
+                comments: [
+                    ...state.comments,
+                    {
+                        id: res.data.id,
+                        author: userid,
+                        avatar: avataUrl,
+                        content: <p>{state.value}</p>,
+                        datetime: makeTime(nowtime),
+                        timestamp: nowtime
+                    },
+                ],
+            })
             notification.info({
                 message: `通知`,
                 description:
@@ -238,9 +242,8 @@ export default function Detail(props) {
             ...state.comments,
             comments: state.comments.filter(item => item.id !== id)
         })
-
         axios.delete(`/comments/${id}`).then(res => {
-            notification.info({
+            notification.success({
                 message: `通知`,
                 description:
                     `您已经删除了该评论`,
@@ -249,57 +252,59 @@ export default function Detail(props) {
         })
     }
     return (
-        <div style={{ width: "95%", margin: '0 auto' }}>
-            {
-                newsInfo && <div>
-                    <PageHeader
-                        onBack={() => window.history.back()}
-                        title={newsInfo.title}
-                        subTitle={
-                            <div>
-                                {newsInfo.category.title}
-                                <HeartTwoTone style={{ marginLeft: "5px" }} twoToneColor={heartState ? ("#eb2f96") : ("#690")} onClick={() => handleStar()} />
-                            </div>
-                        }>
-                        <Descriptions size="small" column={3}>
-                            <Descriptions.Item label="创建者">{newsInfo.author}</Descriptions.Item>
-                            <Descriptions.Item label="发布时间">{newsInfo.publishTime ? moment(newsInfo.publishTime).format("YYYY/MM/DD HH:mm:ss") : "-"}</Descriptions.Item>
-                            <Descriptions.Item label="区域">{newsInfo.region}</Descriptions.Item>
-                            <Descriptions.Item label="访问数量">{newsInfo.view}</Descriptions.Item>
-                            <Descriptions.Item label="点赞数量">{newsInfo.star}</Descriptions.Item>
-                            <Descriptions.Item label="评论数量"><span style={{ fontWeight: "bold", color: "orange" }}>{state.comments.length}</span></Descriptions.Item>
-                        </Descriptions>
-                    </PageHeader>
-                    <div dangerouslySetInnerHTML={{
-                        __html: newsInfo.content
-                    }} style={{
-                        border: "1px solid #ccc",
-                        padding: "15px",
-                        margin: "0 24px"
-                    }}>
+        <Spin size="large" spinning={spin}>
+            <div style={{ width: "95%", margin: '0 auto' }}>
+                {
+                    newsInfo && <div>
+                        <PageHeader
+                            onBack={() => window.history.back()}
+                            title={newsInfo.title}
+                            subTitle={
+                                <div>
+                                    {newsInfo.category.title}
+                                    <HeartTwoTone style={{ marginLeft: "5px" }} twoToneColor={heartState ? ("#eb2f96") : ("#690")} onClick={() => handleStar()} />
+                                </div>
+                            }>
+                            <Descriptions size="small" column={3}>
+                                <Descriptions.Item label="创建者">{newsInfo.author}</Descriptions.Item>
+                                <Descriptions.Item label="发布时间">{newsInfo.publishTime ? moment(newsInfo.publishTime).format("YYYY/MM/DD HH:mm:ss") : "-"}</Descriptions.Item>
+                                <Descriptions.Item label="区域">{newsInfo.region}</Descriptions.Item>
+                                <Descriptions.Item label="访问数量">{newsInfo.view}</Descriptions.Item>
+                                <Descriptions.Item label="点赞数量">{newsInfo.star}</Descriptions.Item>
+                                <Descriptions.Item label="评论数量"><span style={{ fontWeight: "bold", color: "orange" }}>{state.comments.length}</span></Descriptions.Item>
+                            </Descriptions>
+                        </PageHeader>
+                        <div dangerouslySetInnerHTML={{
+                            __html: newsInfo.content
+                        }} style={{
+                            border: "1px solid #ccc",
+                            padding: "15px",
+                            margin: "0 24px"
+                        }}>
+                        </div>
                     </div>
-                </div>
-            }
+                }
 
 
-            {state.comments.length > 0 && <CommentList comments={state.comments} />}
-            <Comment style={{ width: "97%", margin: '0 auto' }}
-                author={userid}
-                avatar={<Avatar src={avataUrl} alt={avataUrl} title="点击换头像" onClick={() => changeAvata()} />}
-                datetime={
-                    <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                        <span>{moment().format('YYYY-MM-DD HH:mm:ss')}</span>
-                    </Tooltip>
-                }
-                content={
-                    <Editor
-                        onChange={handleChange}
-                        onSubmit={handleSubmit.bind(this, userid)}
-                        submitting={state.submitting}
-                        value={state.value}
-                    />
-                }
-            />
-        </div >
+                {state.comments.length > 0 && <CommentList comments={state.comments} />}
+                <Comment style={{ width: "97%", margin: '0 auto' }}
+                    author={userid}
+                    avatar={<Avatar src={avataUrl} alt={avataUrl} title="点击换头像" onClick={() => changeAvata()} />}
+                    datetime={
+                        <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
+                            <span>{moment().format('YYYY-MM-DD HH:mm:ss')}</span>
+                        </Tooltip>
+                    }
+                    content={
+                        <Editor
+                            onChange={handleChange}
+                            onSubmit={handleSubmit.bind(this, userid)}
+                            submitting={state.submitting}
+                            value={state.value}
+                        />
+                    }
+                />
+            </div >
+        </Spin>
     )
 }
