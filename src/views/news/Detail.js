@@ -4,8 +4,6 @@ import { PageHeader, Descriptions, message, Tooltip, Comment, Avatar, Form, Butt
 import { HeartTwoTone } from '@ant-design/icons'
 import moment from 'moment'
 import { v4 as uuidv4 } from "uuid"
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
 import {
     ExclamationCircleOutlined
 } from '@ant-design/icons'
@@ -29,11 +27,6 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
 )
 
 export default function Detail(props) {
-    NProgress.start()
-    useEffect(() => {
-        NProgress.done()
-    })
-
     let userid = ''
     const useridToken = localStorage.getItem("userid" + props.match.params.id)
     if (useridToken) {
