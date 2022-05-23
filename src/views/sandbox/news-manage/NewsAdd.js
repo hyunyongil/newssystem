@@ -40,6 +40,7 @@ export default function NewsAdd(props) {
         wrapperCol: { span: 20 },
     }
     const NewsForm = useRef(null)
+    //http://yong.piaomou.vip/category.php
     useEffect(() => {
         axios.get("categories").then(res => {
             setCategoryList(res.data)
