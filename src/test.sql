@@ -1,5 +1,5 @@
 
-07:34:57
+07:34:00
 
 cd C:\phpstudy_pro\WWW\gng.com\newssystem\db
 json-server --watch .\db.json --port 8000
@@ -30,7 +30,7 @@ zxc1004i->
 -101000
 375000
 -100000
-1009540
+=1009540
 
 Array
 (
