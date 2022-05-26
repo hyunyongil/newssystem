@@ -41,8 +41,10 @@ export default function NewsAdd(props) {
     }
     const NewsForm = useRef(null)
     //http://yong.piaomou.vip/category.php
+    //http://openapi.com/api/v1/item_event_from_oversea?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0YnV5ZXJjb20iLCJpYXQiOjE2NTM1NTk1NjcsImlzcyI6Imh0dHBzOi8vZG9tZW1lZGIuZG9tZWdnb29rLmNvbS8iLCJqdGkiOiI0ZDk5MmUwZGJjNjdjY2FlNzQzYzZlNzM1YTRkZmU0MCIsImV4cCI6MTY1MzU3Mzk2N30.fOFKP9E426blzhJiQI6_cfvoRcSrGzgvxStrcEGcYKU
     useEffect(() => {
         axios.get("categories").then(res => {
+            console.log(res.data)
             setCategoryList(res.data)
         })
     }, [])
